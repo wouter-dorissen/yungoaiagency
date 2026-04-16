@@ -1172,8 +1172,10 @@
         <div class="container">
             <div class="why-us-grid">
                 <div class="why-us-visual">
-                    <div class="video-wrapper" id="videoWrapper" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;box-shadow:0 0 40px rgba(139,92,246,0.15);cursor:pointer;">
-                        <iframe src="https://player.vimeo.com/video/1183722399?h=bd67edfac4&background=1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;pointer-events:none;" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy" id="vimeoPlayer"></iframe>
+                    <div class="video-wrapper" id="videoWrapper" style="position:relative;border-radius:12px;overflow:hidden;box-shadow:0 0 40px rgba(139,92,246,0.15);cursor:pointer;">
+                        <video id="showreelVideo" autoplay loop muted playsinline style="width:100%;display:block;">
+                            <source src="2026-4-yungo_ai-long-1-dienstvideo-showreel-horizontaal-30_v1%20(1080p).mp4" type="video/mp4">
+                        </video>
                         <button id="audioToggle" aria-label="Geluid aan/uit" style="position:absolute;bottom:16px;right:16px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity 0.3s ease;z-index:2;">
                             <svg id="iconMuted" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
                             <svg id="iconUnmuted" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
@@ -1381,21 +1383,16 @@
         </div>
     </section>
 
-    <!-- Vimeo Player API for audio toggle -->
-    <script src="https://player.vimeo.com/api/player.js"></script>
+    <!-- Audio toggle for showreel video -->
     <script>
     (function() {
-        var iframe = document.getElementById('vimeoPlayer');
+        var video = document.getElementById('showreelVideo');
         var wrapper = document.getElementById('videoWrapper');
         var btn = document.getElementById('audioToggle');
         var iconMuted = document.getElementById('iconMuted');
         var iconUnmuted = document.getElementById('iconUnmuted');
-        if (!iframe || !btn) return;
+        if (!video || !btn) return;
 
-        var player = new Vimeo.Player(iframe);
-        var isMuted = true;
-
-        /* Show button on hover */
         wrapper.addEventListener('mouseenter', function() {
             btn.style.opacity = '1';
         });
@@ -1403,12 +1400,10 @@
             btn.style.opacity = '0';
         });
 
-        /* Toggle audio on click */
         wrapper.addEventListener('click', function() {
-            isMuted = !isMuted;
-            player.setVolume(isMuted ? 0 : 1);
-            iconMuted.style.display = isMuted ? 'block' : 'none';
-            iconUnmuted.style.display = isMuted ? 'none' : 'block';
+            video.muted = !video.muted;
+            iconMuted.style.display = video.muted ? 'block' : 'none';
+            iconUnmuted.style.display = video.muted ? 'none' : 'block';
         });
     })();
     </script>
