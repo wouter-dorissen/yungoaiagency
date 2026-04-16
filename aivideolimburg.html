@@ -1172,10 +1172,12 @@
         <div class="container">
             <div class="why-us-grid">
                 <div class="why-us-visual">
-                    <div class="why-us-visual-placeholder">
-                        <div class="icon"><svg viewBox="0 0 24 24" style="width:48px;height:48px;stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div>
-                        <p>Eén shootdag &rarr; ongelimiteerde content</p>
-                        <p style="margin-top: 0.5rem; font-size: 0.75rem; color: rgba(255,255,255,0.3);">Vervang door voorbeeld van AI-karakter</p>
+                    <div class="video-wrapper" id="videoWrapper" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;box-shadow:0 0 40px rgba(139,92,246,0.15);cursor:pointer;">
+                        <iframe src="https://player.vimeo.com/video/1183722399?h=bd67edfac4&autoplay=1&loop=1&autopause=0&muted=1&title=0&byline=0&portrait=0&controls=0&background=0" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;pointer-events:none;" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy" id="vimeoPlayer"></iframe>
+                        <button id="audioToggle" aria-label="Geluid aan/uit" style="position:absolute;bottom:16px;right:16px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity 0.3s ease;z-index:2;">
+                            <svg id="iconMuted" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                            <svg id="iconUnmuted" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        </button>
                     </div>
                 </div>
                 <div class="why-us-text">
@@ -1330,7 +1332,7 @@
                     </div>
                 </div>
 
-                <form class="contact-form" action="https://formspree.io/f/xrerpzwo" method="POST">
+                <form class="contact-form" id="contactForm">
                     <div class="form-row">
                         <input type="text" name="naam" placeholder="Naam *" required>
                         <input type="text" name="bedrijf" placeholder="Bedrijf *" required>
@@ -1349,12 +1351,67 @@
                     </select>
                     <textarea name="bericht" placeholder="Vertel kort over je project of waar je AI-video voor wil inzetten..." rows="5"></textarea>
                     <input type="hidden" name="_subject" value="Nieuwe offerte aanvraag - AI Video Limburg">
-                    <input type="hidden" name="_next" value="https://aivideolimburg.be/bedankt.html">
                     <button type="submit" class="btn-primary">Vraag een offerte aan</button>
                 </form>
+                <script>
+                document.getElementById('contactForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    var form = this;
+                    var btn = form.querySelector('button[type="submit"]');
+                    btn.textContent = 'Verzenden...';
+                    btn.disabled = true;
+                    fetch('https://formspree.io/f/xrerpzwo', {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: { 'Accept': 'application/json' }
+                    }).then(function(response) {
+                        if (response.ok) {
+                            window.location.href = '/bedankt';
+                        } else {
+                            btn.textContent = 'Er ging iets mis, probeer opnieuw';
+                            btn.disabled = false;
+                        }
+                    }).catch(function() {
+                        btn.textContent = 'Er ging iets mis, probeer opnieuw';
+                        btn.disabled = false;
+                    });
+                });
+                </script>
             </div>
         </div>
     </section>
+
+    <!-- Vimeo Player API for audio toggle -->
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <script>
+    (function() {
+        var iframe = document.getElementById('vimeoPlayer');
+        var wrapper = document.getElementById('videoWrapper');
+        var btn = document.getElementById('audioToggle');
+        var iconMuted = document.getElementById('iconMuted');
+        var iconUnmuted = document.getElementById('iconUnmuted');
+        if (!iframe || !btn) return;
+
+        var player = new Vimeo.Player(iframe);
+        var isMuted = true;
+
+        /* Show button on hover */
+        wrapper.addEventListener('mouseenter', function() {
+            btn.style.opacity = '1';
+        });
+        wrapper.addEventListener('mouseleave', function() {
+            btn.style.opacity = '0';
+        });
+
+        /* Toggle audio on click */
+        wrapper.addEventListener('click', function() {
+            isMuted = !isMuted;
+            player.setVolume(isMuted ? 0 : 1);
+            iconMuted.style.display = isMuted ? 'block' : 'none';
+            iconUnmuted.style.display = isMuted ? 'none' : 'block';
+        });
+    })();
+    </script>
 
     <!-- Footer -->
     <footer>
