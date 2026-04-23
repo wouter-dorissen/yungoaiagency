@@ -13,8 +13,13 @@
       gtag('config', 'AW-18095273642');
     </script>
 
-    <!-- Event snippet for Leadformulier indienen (1) conversion page -->
+    <!-- Enhanced conversions + Event snippet for Leadformulier indienen (1) -->
     <script>
+      var params = new URLSearchParams(window.location.search);
+      var email = params.get('e');
+      if (email) {
+        gtag('set', 'user_data', { 'email': email });
+      }
       gtag('event', 'conversion', {'send_to': 'AW-18095273642/vX0QCP-u2Z0cEKrtv7RD'});
     </script>
 
